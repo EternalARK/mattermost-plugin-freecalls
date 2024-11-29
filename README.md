@@ -1,5 +1,6 @@
-# Mattermost Calls
+# Mattermost FreeCalls
 
+**Just to test my go env, do not use in production environment.**
 ![calls_screen](https://user-images.githubusercontent.com/1832946/205749357-1f2d5af3-cfe7-4352-b1f2-953a31d91fca.png)
 
 Calls enables voice calling and screen sharing functionality in Mattermost channels.
