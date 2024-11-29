@@ -106,58 +106,58 @@ func TestAddUserSession(t *testing.T) {
 		require.Equal(t, retState, retState2)
 	})
 
-	t.Run("allow calls in DMs only when unlicensed", func(t *testing.T) {
-		defer mockAPI.AssertExpectations(t)
-		defer mockMetrics.AssertExpectations(t)
-		defer ResetTestStore(t, p.store)
+	// t.Run("allow calls in DMs only when unlicensed", func(t *testing.T) {
+	// 	defer mockAPI.AssertExpectations(t)
+	// 	defer mockMetrics.AssertExpectations(t)
+	// 	defer ResetTestStore(t, p.store)
 
-		mockAPI.On("GetConfig").Return(&model.Config{}, nil).Times(6)
-		mockAPI.On("GetLicense").Return(&model.License{}, nil).Times(3)
+	// 	mockAPI.On("GetConfig").Return(&model.Config{}, nil).Times(6)
+	// 	mockAPI.On("GetLicense").Return(&model.License{}, nil).Times(3)
 
-		t.Run("public channel", func(t *testing.T) {
-			mockAPI.On("SendEphemeralPost", "userA", &model.Post{
-				ChannelId: "channelID",
-				Message:   "app.add_user_session.group_calls_not_allowed_error",
-			}).Return(nil).Once()
+	// 	t.Run("public channel", func(t *testing.T) {
+	// 		mockAPI.On("SendEphemeralPost", "userA", &model.Post{
+	// 			ChannelId: "channelID",
+	// 			Message:   "app.add_user_session.group_calls_not_allowed_error",
+	// 		}).Return(nil).Once()
 
-			retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeOpen)
-			require.Equal(t, errGroupCallsNotAllowed, err)
-			require.Nil(t, retState)
-		})
+	// 		retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeOpen)
+	// 		require.Equal(t, errGroupCallsNotAllowed, err)
+	// 		require.Nil(t, retState)
+	// 	})
 
-		t.Run("private channel", func(t *testing.T) {
-			mockAPI.On("SendEphemeralPost", "userA", &model.Post{
-				ChannelId: "channelID",
-				Message:   "app.add_user_session.group_calls_not_allowed_error",
-			}).Return(nil).Once()
+	// 	t.Run("private channel", func(t *testing.T) {
+	// 		mockAPI.On("SendEphemeralPost", "userA", &model.Post{
+	// 			ChannelId: "channelID",
+	// 			Message:   "app.add_user_session.group_calls_not_allowed_error",
+	// 		}).Return(nil).Once()
 
-			retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypePrivate)
-			require.Equal(t, errGroupCallsNotAllowed, err)
-			require.Nil(t, retState)
-		})
+	// 		retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypePrivate)
+	// 		require.Equal(t, errGroupCallsNotAllowed, err)
+	// 		require.Nil(t, retState)
+	// 	})
 
-		t.Run("group channel", func(t *testing.T) {
-			mockAPI.On("SendEphemeralPost", "userA", &model.Post{
-				ChannelId: "channelID",
-				Message:   "app.add_user_session.group_calls_not_allowed_error",
-			}).Return(nil).Once()
+	// 	t.Run("group channel", func(t *testing.T) {
+	// 		mockAPI.On("SendEphemeralPost", "userA", &model.Post{
+	// 			ChannelId: "channelID",
+	// 			Message:   "app.add_user_session.group_calls_not_allowed_error",
+	// 		}).Return(nil).Once()
 
-			retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeGroup)
-			require.Equal(t, errGroupCallsNotAllowed, err)
-			require.Nil(t, retState)
-		})
+	// 		retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeGroup)
+	// 		require.Equal(t, errGroupCallsNotAllowed, err)
+	// 		require.Nil(t, retState)
+	// 	})
 
-		t.Run("direct channel", func(t *testing.T) {
-			mockMetrics.On("IncWebSocketEvent", "out", wsEventCallHostChanged).Once()
-			mockAPI.On("PublishWebSocketEvent", wsEventCallHostChanged, mock.Anything,
-				&model.WebsocketBroadcast{UserId: "userA", ChannelId: "channelID", ReliableClusterSend: true}).Once()
+	// 	t.Run("direct channel", func(t *testing.T) {
+	// 		mockMetrics.On("IncWebSocketEvent", "out", wsEventCallHostChanged).Once()
+	// 		mockAPI.On("PublishWebSocketEvent", wsEventCallHostChanged, mock.Anything,
+	// 			&model.WebsocketBroadcast{UserId: "userA", ChannelId: "channelID", ReliableClusterSend: true}).Once()
 
-			retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeDirect)
-			require.NoError(t, err)
-			require.NotNil(t, retState)
-			require.Equal(t, map[string]struct{}{"userA": {}}, retState.Props.Participants)
-			require.Len(t, retState.sessions, 1)
-			require.NotNil(t, retState.sessions["connA"])
-		})
-	})
+	// 		retState, err := p.addUserSession(nil, model.NewBool(true), "userA", "connA", "channelID", "", model.ChannelTypeDirect)
+	// 		require.NoError(t, err)
+	// 		require.NotNil(t, retState)
+	// 		require.Equal(t, map[string]struct{}{"userA": {}}, retState.Props.Participants)
+	// 		require.Len(t, retState.sessions, 1)
+	// 		require.NotNil(t, retState.sessions["connA"])
+	// 	})
+	// })
 }

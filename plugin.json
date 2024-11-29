@@ -1,6 +1,6 @@
 {
   "id": "com.mattermost.calls",
-  "name": "Calls",
+  "name": "Free Calls",
   "description": "Integrates real-time voice communication in Mattermost",
   "homepage_url": "https://github.com/mattermost/mattermost-plugin-calls/",
   "support_url": "https://github.com/mattermost/mattermost-plugin-calls/issues",
