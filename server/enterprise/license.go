@@ -4,8 +4,6 @@
 package enterprise
 
 import (
-	"os"
-
 	"github.com/mattermost/mattermost-plugin-calls/server/license"
 
 	"github.com/mattermost/mattermost/server/public/model"
@@ -44,19 +42,23 @@ func (e *LicenseChecker) RTCDAllowed() bool {
 // RecordingsAllowed returns true if the license allows use of
 // the call recordings functionality.
 func (e *LicenseChecker) RecordingsAllowed() bool {
-	return e.isAtLeastE20Licensed()
+	return true
+	//return e.isAtLeastE20Licensed()
 }
 
 // RecordingsAllowed returns true if the license allows use of
 // the call transcriptions functionality.
 func (e *LicenseChecker) TranscriptionsAllowed() bool {
-	return e.isAtLeastE20Licensed()
+	return true
+	//return e.isAtLeastE20Licensed()
 }
 
 func (e *LicenseChecker) HostControlsAllowed() bool {
-	return e.isAtLeastE10Licensed()
+	return true
+	//return e.isAtLeastE10Licensed()
 }
 
 func (e *LicenseChecker) GroupCallsAllowed() bool {
-	return e.isAtLeastE10Licensed() || os.Getenv("MM_CALLS_GROUP_CALLS_ALLOWED") == "true"
+	return true
+	//return e.isAtLeastE10Licensed() || os.Getenv("MM_CALLS_GROUP_CALLS_ALLOWED") == "true"
 }
